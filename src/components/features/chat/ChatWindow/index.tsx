@@ -40,10 +40,9 @@ export default function ChatWindow({ contact, sessionId }: ChatWindowProps) {
     try {
       await sendMedia({
         to: contact.phoneNumber,
+        mediaBase64: base64,
         mediaType: type,
-        mediaData: base64,
         caption,
-        fileName: file.name,
       });
     } catch (error) {
       console.error('Error sending media:', error);
@@ -58,8 +57,7 @@ export default function ChatWindow({ contact, sessionId }: ChatWindowProps) {
     try {
       await sendAudio({
         to: contact.phoneNumber,
-        audioData: base64,
-        duration,
+        audioBase64: base64,
       });
     } catch (error) {
       console.error('Error sending audio:', error);
@@ -76,7 +74,6 @@ export default function ChatWindow({ contact, sessionId }: ChatWindowProps) {
         to: contact.phoneNumber,
         latitude,
         longitude,
-        address,
       });
     } catch (error) {
       console.error('Error sending location:', error);
@@ -154,7 +151,7 @@ export default function ChatWindow({ contact, sessionId }: ChatWindowProps) {
               <p className="text-gray-600">Carregando mensagens...</p>
             </div>
           </div>
-        ) : messages.length === 0 ? (
+        ) : !messages || messages.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-center text-gray-500">
               <User className="w-16 h-16 mx-auto mb-4 text-gray-400" />

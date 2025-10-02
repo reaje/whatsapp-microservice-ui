@@ -11,7 +11,7 @@ export interface Message {
   type: MessageType;
   content: any;
   status: MessageStatus;
-  timestamp: Date;
+  timestamp: string; // ISO 8601 string for Redux serialization
   error?: string;
   metadata?: Record<string, any>;
 }
@@ -43,7 +43,7 @@ export interface MessageResponse {
   messageId: string;
   status: MessageStatus;
   provider: string;
-  timestamp: Date;
+  timestamp: string; // ISO 8601 string for Redux serialization
   error?: string;
   metadata?: Record<string, any>;
 }

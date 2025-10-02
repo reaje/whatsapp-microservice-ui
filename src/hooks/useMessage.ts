@@ -28,15 +28,33 @@ export const useMessage = (contactId?: string) => {
   // Get messages for active contact
   const contactMessages = contactId ? messages[contactId] : [];
 
-  // Fetch messages from Supabase
+  // Fetch messages from API
   const {
     data: fetchedMessages,
     isLoading: messagesLoading,
     refetch: refetchMessages
   } = useQuery({
-    queryKey: [QUERY_KEYS.MESSAGES, contactId],
-    queryFn: () => supabaseService.getMessages(contactId!),
-    enabled: !!contactId,
+    queryKey: [QUERY_KEYS.MESSAGES, activeContact?.phoneNumber],
+    queryFn: async () => {
+      if (!activeContact?.phoneNumber) return [];
+      const history = await messageService.getMessageHistory(activeContact.phoneNumber, 100);
+
+      // Map backend response to Message type
+      return history.map((msg: any) => ({
+        id: msg.id || msg.messageId,
+        sessionId: msg.sessionId,
+        messageId: msg.messageId,
+        fromNumber: msg.fromNumber || msg.from,
+        toNumber: msg.toNumber || msg.to,
+        type: msg.type,
+        content: msg.content || { text: msg.textContent },
+        status: msg.status,
+        timestamp: new Date(msg.timestamp).toISOString(),
+        error: msg.error,
+        metadata: msg.metadata,
+      }));
+    },
+    enabled: !!activeContact?.phoneNumber,
   });
 
   // Update Redux when messages are fetched
@@ -79,7 +97,7 @@ export const useMessage = (contactId?: string) => {
         type: 'text',
         content: { text: request.content },
         status: 'sending',
-        timestamp: new Date(),
+        timestamp: new Date().toISOString(),
       };
 
       if (contactId) {

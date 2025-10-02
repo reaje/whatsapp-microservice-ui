@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MessageSquare } from 'lucide-react';
+import Header from '@/components/layout/Header';
+import Sidebar from '@/components/layout/Sidebar';
 import ContactList from '@/components/features/chat/ContactList';
 import ChatWindow from '@/components/features/chat/ChatWindow';
 import { setActiveContact, setContacts } from '@/store/slices/chatSlice';
@@ -43,7 +45,7 @@ export default function ConversationsPage() {
             type: conv.lastMessage.type,
             content: conv.lastMessage.content,
             status: conv.lastMessage.status,
-            timestamp: new Date(conv.lastMessage.timestamp),
+            timestamp: new Date(conv.lastMessage.timestamp).toISOString(),
           } : undefined,
         }));
 
@@ -64,8 +66,10 @@ export default function ConversationsPage() {
   };
 
   return (
-    <div className="fixed inset-0 top-16 left-64 bg-gray-100">
-      <div className="h-full flex">
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      <Sidebar />
+      <div className="ml-64 mt-16 h-[calc(100vh-4rem)] flex bg-gray-100">
         {/* Contact List - Left Sidebar */}
         <div className="w-96 flex-shrink-0">
           <ContactList

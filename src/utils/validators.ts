@@ -10,7 +10,8 @@ export const initializeSessionSchema = z.object({
   phoneNumber: z.string()
     .min(10, 'Número de telefone inválido')
     .regex(/^\d+$/, 'Apenas números são permitidos'),
-  providerType: z.number().int().min(0).max(1), // 0 = Baileys, 1 = Meta API
+  providerType: z.enum(['baileys', 'meta_api'])
+    .transform((val) => val === 'baileys' ? 0 : 1),
 });
 
 export const sendTextMessageSchema = z.object({

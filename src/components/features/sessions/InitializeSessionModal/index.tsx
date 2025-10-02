@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X, Smartphone } from 'lucide-react';
 import { initializeSessionSchema, type InitializeSessionInput } from '@/utils/validators';
-import type { ProviderType } from '@/types';
+import type { InitializeSessionFormData, ProviderTypeString } from '@/types';
 
 interface InitializeSessionModalProps {
   onClose: () => void;
@@ -21,20 +21,21 @@ export default function InitializeSessionModal({
     handleSubmit,
     formState: { errors },
     watch
-  } = useForm<InitializeSessionInput>({
+  } = useForm<InitializeSessionFormData>({
     resolver: zodResolver(initializeSessionSchema),
     defaultValues: {
       phoneNumber: '',
-      providerType: 'baileys',
+      providerType: 'baileys' as ProviderTypeString,
     },
   });
 
   const providerType = watch('providerType');
 
-  const handleFormSubmit = async (data: InitializeSessionInput) => {
+  const handleFormSubmit = async (data: any) => {
     setLoading(true);
     try {
-      await onSubmit(data);
+      // Data already transformed by Zod schema (string -> number)
+      await onSubmit(data as InitializeSessionInput);
       onClose();
     } catch (error) {
       console.error('Error initializing session:', error);

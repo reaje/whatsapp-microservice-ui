@@ -73,11 +73,13 @@ export const messageService = {
     }
   },
 
-  // Helper to ensure dates are properly typed
+  // Helper to ensure dates are in ISO format
   mapMessageResponse(response: MessageResponse): MessageResponse {
     return {
       ...response,
-      timestamp: new Date(response.timestamp),
+      timestamp: typeof response.timestamp === 'string'
+        ? response.timestamp
+        : new Date(response.timestamp).toISOString(),
     };
   },
 };
