@@ -1,0 +1,252 @@
+<svg viewBox="0 0 1200 1600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Title -->
+  <text x="600" y="30" text-anchor="middle" font-size="24" font-weight="bold" fill="#1a1a1a">
+    Frontend React - WhatsApp Multi-Tenant System
+  </text>
+  
+  <!-- Start -->
+  <circle cx="600" cy="80" r="30" fill="#4CAF50" stroke="#2E7D32" stroke-width="2"/>
+  <text x="600" y="87" text-anchor="middle" fill="white" font-weight="bold">START</text>
+  
+  <!-- Auth Flow -->
+  <rect x="500" y="130" width="200" height="60" rx="5" fill="#2196F3" stroke="#1565C0" stroke-width="2"/>
+  <text x="600" y="155" text-anchor="middle" fill="white" font-weight="bold">Authentication</text>
+  <text x="600" y="175" text-anchor="middle" fill="white" font-size="12">Login / Register</text>
+  
+  <!-- Tenant Selection -->
+  <polygon points="600,210 700,250 600,290 500,250" fill="#FF9800" stroke="#E65100" stroke-width="2"/>
+  <text x="600" y="250" text-anchor="middle" fill="white" font-weight="bold">Tenant</text>
+  <text x="600" y="265" text-anchor="middle" fill="white" font-size="12">Selection</text>
+  
+  <!-- Main Dashboard -->
+  <rect x="475" y="320" width="250" height="80" rx="5" fill="#9C27B0" stroke="#6A1B9A" stroke-width="2"/>
+  <text x="600" y="350" text-anchor="middle" fill="white" font-weight="bold">Main Dashboard</text>
+  <text x="600" y="370" text-anchor="middle" fill="white" font-size="12">Metrics & Overview</text>
+  <text x="600" y="385" text-anchor="middle" fill="white" font-size="12">Active Sessions</text>
+  
+  <!-- Three main branches -->
+  <!-- Branch 1: Conversations -->
+  <rect x="150" y="450" width="200" height="70" rx="5" fill="#00BCD4" stroke="#00838F" stroke-width="2"/>
+  <text x="250" y="475" text-anchor="middle" fill="white" font-weight="bold">Conversations</text>
+  <text x="250" y="495" text-anchor="middle" fill="white" font-size="12">Chat Interface</text>
+  <text x="250" y="510" text-anchor="middle" fill="white" font-size="12">Message History</text>
+  
+  <!-- Sub-components for Conversations -->
+  <rect x="50" y="560" width="140" height="50" rx="5" fill="#E1F5FE" stroke="#0277BD" stroke-width="1"/>
+  <text x="120" y="580" text-anchor="middle" font-size="12">Contact List</text>
+  <text x="120" y="595" text-anchor="middle" font-size="11">• Search</text>
+  
+  <rect x="210" y="560" width="140" height="50" rx="5" fill="#E1F5FE" stroke="#0277BD" stroke-width="1"/>
+  <text x="280" y="580" text-anchor="middle" font-size="12">Chat Window</text>
+  <text x="280" y="595" text-anchor="middle" font-size="11">• Real-time msgs</text>
+  
+  <rect x="50" y="630" width="140" height="50" rx="5" fill="#E1F5FE" stroke="#0277BD" stroke-width="1"/>
+  <text x="120" y="650" text-anchor="middle" font-size="12">Media Gallery</text>
+  <text x="120" y="665" text-anchor="middle" font-size="11">• Photos/Videos</text>
+  
+  <rect x="210" y="630" width="140" height="50" rx="5" fill="#E1F5FE" stroke="#0277BD" stroke-width="1"/>
+  <text x="280" y="650" text-anchor="middle" font-size="12">Voice Messages</text>
+  <text x="280" y="665" text-anchor="middle" font-size="11">• Record/Play</text>
+  
+  <!-- Branch 2: AI Agents -->
+  <rect x="500" y="450" width="200" height="70" rx="5" fill="#4CAF50" stroke="#2E7D32" stroke-width="2"/>
+  <text x="600" y="475" text-anchor="middle" fill="white" font-weight="bold">AI Agents</text>
+  <text x="600" y="495" text-anchor="middle" fill="white" font-size="12">Configuration</text>
+  <text x="600" y="510" text-anchor="middle" fill="white" font-size="12">Management</text>
+  
+  <!-- Sub-components for AI Agents -->
+  <rect x="400" y="560" width="140" height="50" rx="5" fill="#E8F5E9" stroke="#388E3C" stroke-width="1"/>
+  <text x="470" y="580" text-anchor="middle" font-size="12">Agent Creator</text>
+  <text x="470" y="595" text-anchor="middle" font-size="11">• Templates</text>
+  
+  <rect x="560" y="560" width="140" height="50" rx="5" fill="#E8F5E9" stroke="#388E3C" stroke-width="1"/>
+  <text x="630" y="580" text-anchor="middle" font-size="12">Training Data</text>
+  <text x="630" y="595" text-anchor="middle" font-size="11">• Knowledge Base</text>
+  
+  <rect x="400" y="630" width="140" height="50" rx="5" fill="#E8F5E9" stroke="#388E3C" stroke-width="1"/>
+  <text x="470" y="650" text-anchor="middle" font-size="12">Performance</text>
+  <text x="470" y="665" text-anchor="middle" font-size="11">• Analytics</text>
+  
+  <rect x="560" y="630" width="140" height="50" rx="5" fill="#E8F5E9" stroke="#388E3C" stroke-width="1"/>
+  <text x="630" y="650" text-anchor="middle" font-size="12">Context Manager</text>
+  <text x="630" y="665" text-anchor="middle" font-size="11">• Conversation Flow</text>
+  
+  <!-- Branch 3: Settings -->
+  <rect x="850" y="450" width="200" height="70" rx="5" fill="#FF5722" stroke="#D84315" stroke-width="2"/>
+  <text x="950" y="475" text-anchor="middle" fill="white" font-weight="bold">Settings</text>
+  <text x="950" y="495" text-anchor="middle" fill="white" font-size="12">Configuration</text>
+  <text x="950" y="510" text-anchor="middle" fill="white" font-size="12">Provider Switch</text>
+  
+  <!-- Sub-components for Settings -->
+  <rect x="750" y="560" width="140" height="50" rx="5" fill="#FFEBEE" stroke="#C62828" stroke-width="1"/>
+  <text x="820" y="580" text-anchor="middle" font-size="12">Provider Config</text>
+  <text x="820" y="595" text-anchor="middle" font-size="11">• Baileys/Meta</text>
+  
+  <rect x="910" y="560" width="140" height="50" rx="5" fill="#FFEBEE" stroke="#C62828" stroke-width="1"/>
+  <text x="980" y="580" text-anchor="middle" font-size="12">Webhooks</text>
+  <text x="980" y="595" text-anchor="middle" font-size="11">• Endpoints</text>
+  
+  <rect x="750" y="630" width="140" height="50" rx="5" fill="#FFEBEE" stroke="#C62828" stroke-width="1"/>
+  <text x="820" y="650" text-anchor="middle" font-size="12">API Keys</text>
+  <text x="820" y="665" text-anchor="middle" font-size="11">• Management</text>
+  
+  <rect x="910" y="630" width="140" height="50" rx="5" fill="#FFEBEE" stroke="#C62828" stroke-width="1"/>
+  <text x="980" y="650" text-anchor="middle" font-size="12">Rate Limits</text>
+  <text x="980" y="665" text-anchor="middle" font-size="11">• Quotas</text>
+  
+  <!-- Supabase Integration Layer -->
+  <rect x="400" y="720" width="400" height="60" rx="5" fill="#37474F" stroke="#263238" stroke-width="2"/>
+  <text x="600" y="745" text-anchor="middle" fill="white" font-weight="bold">Supabase Integration Layer</text>
+  <text x="600" y="765" text-anchor="middle" fill="white" font-size="12">Realtime • Webhooks • PostgreSQL</text>
+  
+  <!-- State Management -->
+  <rect x="400" y="810" width="400" height="60" rx="5" fill="#795548" stroke="#5D4037" stroke-width="2"/>
+  <text x="600" y="835" text-anchor="middle" fill="white" font-weight="bold">State Management</text>
+  <text x="600" y="855" text-anchor="middle" fill="white" font-size="12">Redux Toolkit / Zustand / Context API</text>
+  
+  <!-- Component Architecture Details -->
+  <rect x="150" y="900" width="900" height="200" rx="5" fill="#F5F5F5" stroke="#757575" stroke-width="1" stroke-dasharray="5,5"/>
+  <text x="600" y="925" text-anchor="middle" font-weight="bold" font-size="16">Component Architecture</text>
+  
+  <!-- Layout Components -->
+  <g transform="translate(200, 940)">
+    <rect x="0" y="0" width="150" height="40" rx="3" fill="#E3F2FD" stroke="#1976D2" stroke-width="1"/>
+    <text x="75" y="20" text-anchor="middle" font-size="12" font-weight="bold">Layout</text>
+    <text x="75" y="32" text-anchor="middle" font-size="10">Sidebar, Header, Footer</text>
+  </g>
+  
+  <!-- Features Components -->
+  <g transform="translate(380, 940)">
+    <rect x="0" y="0" width="150" height="40" rx="3" fill="#F3E5F5" stroke="#7B1FA2" stroke-width="1"/>
+    <text x="75" y="20" text-anchor="middle" font-size="12" font-weight="bold">Features</text>
+    <text x="75" y="32" text-anchor="middle" font-size="10">Chat, Agent, Settings</text>
+  </g>
+  
+  <!-- Common Components -->
+  <g transform="translate(560, 940)">
+    <rect x="0" y="0" width="150" height="40" rx="3" fill="#E8F5E9" stroke="#388E3C" stroke-width="1"/>
+    <text x="75" y="20" text-anchor="middle" font-size="12" font-weight="bold">Common</text>
+    <text x="75" y="32" text-anchor="middle" font-size="10">Button, Modal, Form</text>
+  </g>
+  
+  <!-- Hooks -->
+  <g transform="translate(740, 940)">
+    <rect x="0" y="0" width="150" height="40" rx="3" fill="#FFF3E0" stroke="#E65100" stroke-width="1"/>
+    <text x="75" y="20" text-anchor="middle" font-size="12" font-weight="bold">Hooks</text>
+    <text x="75" y="32" text-anchor="middle" font-size="10">useAuth, useWhatsApp</text>
+  </g>
+  
+  <!-- Services -->
+  <g transform="translate(200, 1000)">
+    <rect x="0" y="0" width="150" height="40" rx="3" fill="#FCE4EC" stroke="#C2185B" stroke-width="1"/>
+    <text x="75" y="20" text-anchor="middle" font-size="12" font-weight="bold">Services</text>
+    <text x="75" y="32" text-anchor="middle" font-size="10">API, WebSocket, Storage</text>
+  </g>
+  
+  <!-- Utils -->
+  <g transform="translate(380, 1000)">
+    <rect x="0" y="0" width="150" height="40" rx="3" fill="#E0F2F1" stroke="#00796B" stroke-width="1"/>
+    <text x="75" y="20" text-anchor="middle" font-size="12" font-weight="bold">Utils</text>
+    <text x="75" y="32" text-anchor="middle" font-size="10">Helpers, Validators</text>
+  </g>
+  
+  <!-- Types -->
+  <g transform="translate(560, 1000)">
+    <rect x="0" y="0" width="150" height="40" rx="3" fill="#F3E5F5" stroke="#512DA8" stroke-width="1"/>
+    <text x="75" y="20" text-anchor="middle" font-size="12" font-weight="bold">Types</text>
+    <text x="75" y="32" text-anchor="middle" font-size="10">TypeScript Definitions</text>
+  </g>
+  
+  <!-- Tests -->
+  <g transform="translate(740, 1000)">
+    <rect x="0" y="0" width="150" height="40" rx="3" fill="#ECEFF1" stroke="#455A64" stroke-width="1"/>
+    <text x="75" y="20" text-anchor="middle" font-size="12" font-weight="bold">Tests</text>
+    <text x="75" y="32" text-anchor="middle" font-size="10">Unit, Integration, E2E</text>
+  </g>
+  
+  <!-- Key Features Box -->
+  <rect x="150" y="1130" width="900" height="120" rx="5" fill="#FFF9C4" stroke="#F57C00" stroke-width="2"/>
+  <text x="600" y="1155" text-anchor="middle" font-weight="bold" font-size="16">Key Frontend Features</text>
+  
+  <text x="200" y="1180" font-size="12">• Real-time message updates (Supabase Realtime)</text>
+  <text x="200" y="1200" font-size="12">• Drag & drop file upload</text>
+  <text x="200" y="1220" font-size="12">• Voice message recorder</text>
+  <text x="200" y="1240" font-size="12">• Multi-tenant isolation</text>
+  
+  <text x="600" y="1180" font-size="12">• Dark/Light theme support</text>
+  <text x="600" y="1200" font-size="12">• Responsive design (Mobile-first)</text>
+  <text x="600" y="1220" font-size="12">• PWA capabilities</text>
+  <text x="600" y="1240" font-size="12">• Internationalization (i18n)</text>
+  
+  <!-- Tech Stack -->
+  <rect x="150" y="1280" width="900" height="100" rx="5" fill="#E8EAF6" stroke="#3F51B5" stroke-width="2"/>
+  <text x="600" y="1305" text-anchor="middle" font-weight="bold" font-size="16">Frontend Tech Stack</text>
+  
+  <text x="200" y="1330" font-size="12">• React 18 + TypeScript</text>
+  <text x="200" y="1350" font-size="12">• Vite (Build tool)</text>
+  <text x="200" y="1370" font-size="12">• TailwindCSS + Shadcn/ui</text>
+  
+  <text x="450" y="1330" font-size="12">• React Query (Data fetching)</text>
+  <text x="450" y="1350" font-size="12">• React Hook Form</text>
+  <text x="450" y="1370" font-size="12">• Zod (Validation)</text>
+  
+  <text x="700" y="1330" font-size="12">• Supabase JS Client</text>
+  <text x="700" y="1350" font-size="12">• Socket.io Client</text>
+  <text x="700" y="1370" font-size="12">• React Router v6</text>
+  
+  <!-- Deployment -->
+  <rect x="400" y="1410" width="400" height="60" rx="5" fill="#4CAF50" stroke="#2E7D32" stroke-width="2"/>
+  <text x="600" y="1435" text-anchor="middle" fill="white" font-weight="bold">Deployment</text>
+  <text x="600" y="1455" text-anchor="middle" fill="white" font-size="12">Vercel / Netlify / AWS Amplify</text>
+  
+  <!-- End -->
+  <circle cx="600" cy="1520" r="30" fill="#F44336" stroke="#C62828" stroke-width="2"/>
+  <text x="600" y="1527" text-anchor="middle" fill="white" font-weight="bold">END</text>
+  
+  <!-- Arrows -->
+  <!-- Main flow arrows -->
+  <path d="M 600 110 L 600 130" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 600 190 L 600 210" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 600 290 L 600 320" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Branch arrows -->
+  <path d="M 500 360 L 250 450" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 600 400 L 600 450" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 700 360 L 950 450" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Sub-component arrows -->
+  <path d="M 250 520 L 120 560" stroke="#0277BD" stroke-width="1" fill="none" marker-end="url(#arrowhead-small)"/>
+  <path d="M 250 520 L 280 560" stroke="#0277BD" stroke-width="1" fill="none" marker-end="url(#arrowhead-small)"/>
+  <path d="M 250 520 L 120 630" stroke="#0277BD" stroke-width="1" fill="none" marker-end="url(#arrowhead-small)"/>
+  <path d="M 250 520 L 280 630" stroke="#0277BD" stroke-width="1" fill="none" marker-end="url(#arrowhead-small)"/>
+  
+  <path d="M 600 520 L 470 560" stroke="#388E3C" stroke-width="1" fill="none" marker-end="url(#arrowhead-small)"/>
+  <path d="M 600 520 L 630 560" stroke="#388E3C" stroke-width="1" fill="none" marker-end="url(#arrowhead-small)"/>
+  <path d="M 600 520 L 470 630" stroke="#388E3C" stroke-width="1" fill="none" marker-end="url(#arrowhead-small)"/>
+  <path d="M 600 520 L 630 630" stroke="#388E3C" stroke-width="1" fill="none" marker-end="url(#arrowhead-small)"/>
+  
+  <path d="M 950 520 L 820 560" stroke="#C62828" stroke-width="1" fill="none" marker-end="url(#arrowhead-small)"/>
+  <path d="M 950 520 L 980 560" stroke="#C62828" stroke-width="1" fill="none" marker-end="url(#arrowhead-small)"/>
+  <path d="M 950 520 L 820 630" stroke="#C62828" stroke-width="1" fill="none" marker-end="url(#arrowhead-small)"/>
+  <path d="M 950 520 L 980 630" stroke="#C62828" stroke-width="1" fill="none" marker-end="url(#arrowhead-small)"/>
+  
+  <!-- Integration layer arrows -->
+  <path d="M 200 680 L 400 720" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 600 680 L 600 720" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 950 680 L 800 720" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <path d="M 600 780 L 600 810" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 600 870 L 600 900" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 600 1380 L 600 1410" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 600 1470 L 600 1490" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Arrow marker definitions -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#333"/>
+    </marker>
+    <marker id="arrowhead-small" markerWidth="8" markerHeight="8" refX="7" refY="2.5" orient="auto">
+      <polygon points="0 0, 8 2.5, 0 5" fill="#666"/>
+    </marker>
+  </defs>
+</svg>
