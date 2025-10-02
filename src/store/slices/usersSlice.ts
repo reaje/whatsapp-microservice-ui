@@ -21,7 +21,7 @@ export const fetchUsers = createAsyncThunk(
   'users/fetchAll',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get<User[]>('/api/v1/user');
+      const response = await api.get<User[]>('/user');
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Erro ao carregar usuários');
@@ -34,7 +34,7 @@ export const fetchUserById = createAsyncThunk(
   'users/fetchById',
   async (id: string, { rejectWithValue }) => {
     try {
-      const response = await api.get<User>(`/api/v1/user/${id}`);
+      const response = await api.get<User>(`/user/${id}`);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Erro ao carregar usuário');
@@ -47,7 +47,7 @@ export const createUser = createAsyncThunk(
   'users/create',
   async (userData: CreateUserRequest, { rejectWithValue }) => {
     try {
-      const response = await api.post<User>('/api/v1/user', userData);
+      const response = await api.post<User>('/user', userData);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Erro ao criar usuário');
@@ -60,7 +60,7 @@ export const updateUser = createAsyncThunk(
   'users/update',
   async ({ id, data }: { id: string; data: UpdateUserRequest }, { rejectWithValue }) => {
     try {
-      const response = await api.put<User>(`/api/v1/user/${id}`, data);
+      const response = await api.put<User>(`/user/${id}`, data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Erro ao atualizar usuário');
@@ -73,7 +73,7 @@ export const updateUserPassword = createAsyncThunk(
   'users/updatePassword',
   async ({ id, data }: { id: string; data: UpdatePasswordRequest }, { rejectWithValue }) => {
     try {
-      await api.put(`/api/v1/user/${id}/password`, data);
+      await api.put(`/user/${id}/password`, data);
       return id;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Erro ao atualizar senha');
@@ -86,7 +86,7 @@ export const deactivateUser = createAsyncThunk(
   'users/deactivate',
   async (id: string, { rejectWithValue }) => {
     try {
-      await api.post(`/api/v1/user/${id}/deactivate`);
+      await api.post(`/user/${id}/deactivate`);
       return id;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Erro ao desativar usuário');
@@ -99,7 +99,7 @@ export const deleteUser = createAsyncThunk(
   'users/delete',
   async (id: string, { rejectWithValue }) => {
     try {
-      await api.delete(`/api/v1/user/${id}`);
+      await api.delete(`/user/${id}`);
       return id;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Erro ao deletar usuário');

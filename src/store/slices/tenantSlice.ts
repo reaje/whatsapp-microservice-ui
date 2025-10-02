@@ -19,7 +19,7 @@ export const fetchTenant = createAsyncThunk(
   'tenant/fetch',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await api.get<Tenant>('/api/v1/tenant/settings');
+      const response = await api.get<Tenant>('/tenant/settings');
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Erro ao carregar tenant');
@@ -32,7 +32,7 @@ export const updateTenantSettings = createAsyncThunk(
   'tenant/updateSettings',
   async (settings: TenantSettings, { rejectWithValue }) => {
     try {
-      const response = await api.put<Tenant>('/api/v1/tenant/settings', { settings });
+      const response = await api.put<Tenant>('/tenant/settings', { settings });
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Erro ao atualizar configurações');

@@ -5,7 +5,7 @@ export const tenantService = {
   async getSettings(): Promise<Tenant> {
     try {
       const response = await api.get<Tenant>('/tenant/settings');
-      return this.mapTenantResponse(response.data);
+      return response.data;
     } catch (error) {
       throw handleApiError(error);
     }
@@ -14,7 +14,7 @@ export const tenantService = {
   async updateSettings(settings: TenantSettings): Promise<Tenant> {
     try {
       const response = await api.put<Tenant>('/tenant/settings', { settings });
-      return this.mapTenantResponse(response.data);
+      return response.data;
     } catch (error) {
       throw handleApiError(error);
     }
@@ -23,18 +23,9 @@ export const tenantService = {
   async getAll(): Promise<Tenant[]> {
     try {
       const response = await api.get<Tenant[]>('/tenant');
-      return response.data.map(this.mapTenantResponse);
+      return response.data;
     } catch (error) {
       throw handleApiError(error);
     }
-  },
-
-  // Helper to ensure dates are properly typed
-  mapTenantResponse(response: Tenant): Tenant {
-    return {
-      ...response,
-      createdAt: new Date(response.createdAt),
-      updatedAt: new Date(response.updatedAt),
-    };
   },
 };

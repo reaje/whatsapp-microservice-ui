@@ -1,6 +1,7 @@
 import { Suspense, lazy, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { Toaster } from 'react-hot-toast';
 import { setUser, setLoading } from './store/slices/authSlice';
 import { authService } from './services/auth.service';
 import { ROUTES } from './utils/constants';
@@ -65,8 +66,33 @@ function App() {
   }, [dispatch]);
 
   return (
-    <Suspense fallback={<LoadingScreen />}>
-      <Routes>
+    <>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+          },
+          success: {
+            duration: 3000,
+            iconTheme: {
+              primary: '#10b981',
+              secondary: '#fff',
+            },
+          },
+          error: {
+            duration: 4000,
+            iconTheme: {
+              primary: '#ef4444',
+              secondary: '#fff',
+            },
+          },
+        }}
+      />
+      <Suspense fallback={<LoadingScreen />}>
+        <Routes>
         <Route
           path={ROUTES.LOGIN}
           element={
@@ -115,8 +141,9 @@ function App() {
         />
         <Route path="/" element={<Navigate to={ROUTES.DASHBOARD} replace />} />
         <Route path="*" element={<Navigate to={ROUTES.DASHBOARD} replace />} />
-      </Routes>
-    </Suspense>
+        </Routes>
+      </Suspense>
+    </>
   );
 }
 
