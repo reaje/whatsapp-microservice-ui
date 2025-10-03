@@ -39,6 +39,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ISessionRepository, SessionRepository>();
         services.AddScoped<IMessageRepository, MessageRepository>();
         services.AddScoped<IUserRepository, WhatsApp.Infrastructure.Repositories.UserRepository>();
+        services.AddScoped<IAIAgentRepository, AIAgentRepository>();
+        services.AddScoped<IAIConversationRepository, AIConversationRepository>();
 
         // Services
         services.AddScoped<ITenantService, TenantService>();
@@ -46,6 +48,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ISessionService, SessionService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserService, UserService>();
+
+        // AI Services
+        services.AddScoped<IAIAgentService, AIAgentService>();
+        services.AddScoped<IAIConversationService, AIConversationService>();
 
         // Cache Services
         services.AddSingleton<ISessionCacheService, RedisSessionCacheService>();

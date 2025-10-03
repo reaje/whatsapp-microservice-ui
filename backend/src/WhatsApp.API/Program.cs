@@ -9,7 +9,12 @@ using WhatsApp.Infrastructure.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.MaxDepth = 128;
+    });
 
 // Add SignalR for realtime notifications
 builder.Services.AddSignalR();
@@ -24,52 +29,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddSupabaseClient(builder.Configuration);
 
 // Add OpenAPI for Scalar
-builder.Services.AddOpenApi("v1", options =>
-{
-    options.AddDocumentTransformer((document, context, cancellationToken) =>
-    {
-        document.Info = new()
-        {
-            Title = "WhatsApp Microservice API",
-            Version = "v1",
-            Description = "Microserviço de comunicação WhatsApp Multi-Tenant com Provider Baileys",
-            Contact = new()
-            {
-                Name = "Ventry Team",
-                Email = "dev@ventry.com"
-            }
-        };
-
-        // Add security scheme for X-Client-Id
-        document.Components ??= new();
-        document.Components.SecuritySchemes ??= new Dictionary<string, Microsoft.OpenApi.Models.OpenApiSecurityScheme>();
-        document.Components.SecuritySchemes["X-Client-Id"] = new()
-        {
-            Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
-            Description = "Client ID header for multi-tenant authentication",
-            Name = "X-Client-Id",
-            In = Microsoft.OpenApi.Models.ParameterLocation.Header
-        };
-
-        // Add security requirement
-        document.SecurityRequirements = new List<Microsoft.OpenApi.Models.OpenApiSecurityRequirement>
-        {
-            new()
-            {
-                [new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-                {
-                    Reference = new()
-                    {
-                        Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                        Id = "X-Client-Id"
-                    }
-                }] = Array.Empty<string>()
-            }
-        };
-
-        return Task.CompletedTask;
-    });
-});
+builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 
 // Add Health Checks
@@ -153,16 +113,11 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline.
+// Map OpenAPI document
 app.MapOpenApi();
 
-// Use Scalar for API documentation (available in all environments)
-app.MapScalarApiReference(options =>
-{
-    options
-        .WithTitle("WhatsApp Microservice API")
-        .WithTheme(Scalar.AspNetCore.ScalarTheme.Purple)
-        .WithDefaultHttpClient(Scalar.AspNetCore.ScalarTarget.CSharp, Scalar.AspNetCore.ScalarClient.HttpClient);
-});
+// Use Scalar for API documentation at /scalar
+app.MapScalarApiReference();
 
 app.UseHttpsRedirection();
 

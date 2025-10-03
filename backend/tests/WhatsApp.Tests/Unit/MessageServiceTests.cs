@@ -13,6 +13,7 @@ public class MessageServiceTests
     private readonly Mock<ISessionRepository> _sessionRepositoryMock;
     private readonly Mock<IMessageRepository> _messageRepositoryMock;
     private readonly Mock<IWhatsAppProvider> _whatsAppProviderMock;
+    private readonly Mock<IProviderFactory> _providerFactoryMock;
     private readonly Mock<ISessionService> _sessionServiceMock;
     private readonly Mock<ILogger<MessageService>> _loggerMock;
     private readonly MessageService _messageService;
@@ -22,13 +23,19 @@ public class MessageServiceTests
         _sessionRepositoryMock = new Mock<ISessionRepository>();
         _messageRepositoryMock = new Mock<IMessageRepository>();
         _whatsAppProviderMock = new Mock<IWhatsAppProvider>();
+        _providerFactoryMock = new Mock<IProviderFactory>();
         _sessionServiceMock = new Mock<ISessionService>();
         _loggerMock = new Mock<ILogger<MessageService>>();
+
+        // Configure factory to return mocked provider for any ProviderType
+        _providerFactoryMock
+            .Setup(x => x.GetProvider(It.IsAny<ProviderType>()))
+            .Returns(_whatsAppProviderMock.Object);
 
         _messageService = new MessageService(
             _sessionRepositoryMock.Object,
             _messageRepositoryMock.Object,
-            _whatsAppProviderMock.Object,
+            _providerFactoryMock.Object,
             _sessionServiceMock.Object,
             _loggerMock.Object);
     }
@@ -69,6 +76,7 @@ public class MessageServiceTests
             Id = sessionId,
             TenantId = tenantId,
             PhoneNumber = phoneNumber,
+            ProviderType = ProviderType.Baileys,
             IsActive = true
         };
 
@@ -128,6 +136,7 @@ public class MessageServiceTests
             Id = sessionId,
             TenantId = tenantId,
             PhoneNumber = "+5511888888888",
+            ProviderType = ProviderType.Baileys,
             IsActive = true
         };
 
@@ -181,6 +190,7 @@ public class MessageServiceTests
             Id = sessionId,
             TenantId = tenantId,
             PhoneNumber = "+5511888888888",
+            ProviderType = ProviderType.Baileys,
             IsActive = true
         };
 
@@ -231,6 +241,7 @@ public class MessageServiceTests
             Id = sessionId,
             TenantId = tenantId,
             PhoneNumber = "+5511888888888",
+            ProviderType = ProviderType.Baileys,
             IsActive = true
         };
 

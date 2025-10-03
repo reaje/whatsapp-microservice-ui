@@ -12,7 +12,7 @@ namespace WhatsApp.Infrastructure.Services;
 public class SessionService : ISessionService
 {
     private readonly ISessionRepository _sessionRepository;
-    private readonly IWhatsAppProvider _whatsAppProvider;
+    private readonly IProviderFactory _providerFactory;
     private readonly ILogger<SessionService> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IConfiguration _configuration;
@@ -20,14 +20,14 @@ public class SessionService : ISessionService
 
     public SessionService(
         ISessionRepository sessionRepository,
-        IWhatsAppProvider whatsAppProvider,
+        IProviderFactory providerFactory,
         ILogger<SessionService> logger,
         IHttpClientFactory httpClientFactory,
         IConfiguration configuration,
         ISessionCacheService cacheService)
     {
         _sessionRepository = sessionRepository;
-        _whatsAppProvider = whatsAppProvider;
+        _providerFactory = providerFactory;
         _logger = logger;
         _httpClientFactory = httpClientFactory;
         _configuration = configuration;
@@ -64,7 +64,8 @@ public class SessionService : ISessionService
                 {
                     try
                     {
-                        await _whatsAppProvider.DisconnectAsync(cancellationToken);
+                        var existingProvider = _providerFactory.GetProvider(existingSession.ProviderType);
+                        await existingProvider.DisconnectAsync(cancellationToken);
                         _logger.LogInformation("Disconnected existing active session for phone {PhoneNumber}", normalizedPhone);
                     }
                     catch (Exception ex)
@@ -84,6 +85,9 @@ public class SessionService : ISessionService
             }
         }
 
+        // Get provider for new session
+        var provider = _providerFactory.GetProvider(providerType);
+
         // Create tenant config
         var config = new TenantConfig
         {
@@ -93,7 +97,7 @@ public class SessionService : ISessionService
         };
 
         // Initialize provider
-        var status = await _whatsAppProvider.InitializeAsync(normalizedPhone, config, cancellationToken);
+        var status = await provider.InitializeAsync(normalizedPhone, config, cancellationToken);
 
         // Create new session in database
         var metadata = status.Metadata ?? new Dictionary<string, object>();
@@ -223,7 +227,8 @@ public class SessionService : ISessionService
         }
 
         // Fallback to provider (may be stateless per request)
-        var providerStatus = await _whatsAppProvider.GetStatusAsync(cancellationToken);
+        var provider = _providerFactory.GetProvider(session.ProviderType);
+        var providerStatus = await provider.GetStatusAsync(cancellationToken);
 
         // Update session if status changed
         if (session.IsActive != providerStatus.IsConnected)
@@ -273,7 +278,8 @@ public class SessionService : ISessionService
         }
 
         // Disconnect from provider
-        await _whatsAppProvider.DisconnectAsync(cancellationToken);
+        var provider = _providerFactory.GetProvider(session.ProviderType);
+        await provider.DisconnectAsync(cancellationToken);
 
         // Update session status
         session.IsActive = false;

@@ -17,6 +17,7 @@ public class SessionServiceTests
 {
     private readonly Mock<ISessionRepository> _sessionRepositoryMock;
     private readonly Mock<IWhatsAppProvider> _whatsAppProviderMock;
+    private readonly Mock<IProviderFactory> _providerFactoryMock;
     private readonly Mock<ILogger<SessionService>> _loggerMock;
     private readonly Mock<IHttpClientFactory> _httpClientFactoryMock;
     private readonly Mock<IConfiguration> _configurationMock;
@@ -27,10 +28,16 @@ public class SessionServiceTests
     {
         _sessionRepositoryMock = new Mock<ISessionRepository>();
         _whatsAppProviderMock = new Mock<IWhatsAppProvider>();
+        _providerFactoryMock = new Mock<IProviderFactory>();
         _loggerMock = new Mock<ILogger<SessionService>>();
         _httpClientFactoryMock = new Mock<IHttpClientFactory>();
         _configurationMock = new Mock<IConfiguration>();
         _cacheServiceMock = new Mock<ISessionCacheService>();
+
+        // Configure factory to return mocked provider for any ProviderType
+        _providerFactoryMock
+            .Setup(x => x.GetProvider(It.IsAny<ProviderType>()))
+            .Returns(_whatsAppProviderMock.Object);
 
         // Cache sempre retorna null nos testes (simula cache miss)
         _cacheServiceMock.Setup(x => x.GetSessionStatusAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
@@ -42,7 +49,7 @@ public class SessionServiceTests
 
         _sessionService = new SessionService(
             _sessionRepositoryMock.Object,
-            _whatsAppProviderMock.Object,
+            _providerFactoryMock.Object,
             _loggerMock.Object,
             _httpClientFactoryMock.Object,
             _configurationMock.Object,

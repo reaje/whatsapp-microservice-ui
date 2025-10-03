@@ -11,35 +11,35 @@ public class MessageService : IMessageService
 {
     private readonly ISessionRepository _sessionRepository;
     private readonly IMessageRepository _messageRepository;
-    private readonly IWhatsAppProvider _whatsAppProvider;
+    private readonly IProviderFactory _providerFactory;
     private readonly ISessionService _sessionService;
     private readonly ILogger<MessageService> _logger;
 
     public MessageService(
         ISessionRepository sessionRepository,
         IMessageRepository messageRepository,
-        IWhatsAppProvider whatsAppProvider,
+        IProviderFactory providerFactory,
         ISessionService sessionService,
         ILogger<MessageService> logger)
     {
         _sessionRepository = sessionRepository;
         _messageRepository = messageRepository;
-        _whatsAppProvider = whatsAppProvider;
+        _providerFactory = providerFactory;
         _sessionService = sessionService;
         _logger = logger;
     }
 
-    private async Task EnsureProviderInitializedAsync(WhatsAppSession session, Guid tenantId, CancellationToken cancellationToken)
+    private async Task EnsureProviderInitializedAsync(WhatsAppSession session, Guid tenantId, IWhatsAppProvider provider, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Initializing provider for session {SessionId}, tenant {TenantId}", session.Id, tenantId);
 
         var tenantConfig = new TenantConfig
         {
             TenantId = tenantId,
-            PreferredProvider = ProviderType.Baileys
+            PreferredProvider = session.ProviderType
         };
 
-        await _whatsAppProvider.InitializeAsync(session.PhoneNumber, tenantConfig, cancellationToken);
+        await provider.InitializeAsync(session.PhoneNumber, tenantConfig, cancellationToken);
     }
 
     /// <summary>
@@ -130,11 +130,14 @@ public class MessageService : IMessageService
             };
         }
 
+        // Get provider for session
+        var provider = _providerFactory.GetProvider(session.ProviderType);
+
         // Initialize provider with session
-        await EnsureProviderInitializedAsync(session, tenantId, cancellationToken);
+        await EnsureProviderInitializedAsync(session, tenantId, provider, cancellationToken);
 
         // Send message via provider
-        var result = await _whatsAppProvider.SendTextAsync(to, content, cancellationToken);
+        var result = await provider.SendTextAsync(to, content, cancellationToken);
 
         // Save message to database
         var message = new Message
@@ -180,10 +183,13 @@ public class MessageService : IMessageService
             };
         }
 
-        // Initialize provider with session
-        await EnsureProviderInitializedAsync(session, tenantId, cancellationToken);
+        // Get provider for session
+        var provider = _providerFactory.GetProvider(session.ProviderType);
 
-        var result = await _whatsAppProvider.SendMediaAsync(to, media, mediaType, caption, cancellationToken);
+        // Initialize provider with session
+        await EnsureProviderInitializedAsync(session, tenantId, provider, cancellationToken);
+
+        var result = await provider.SendMediaAsync(to, media, mediaType, caption, cancellationToken);
 
         var message = new Message
         {
@@ -233,10 +239,13 @@ public class MessageService : IMessageService
             };
         }
 
-        // Initialize provider with session
-        await EnsureProviderInitializedAsync(session, tenantId, cancellationToken);
+        // Get provider for session
+        var provider = _providerFactory.GetProvider(session.ProviderType);
 
-        var result = await _whatsAppProvider.SendLocationAsync(to, latitude, longitude, cancellationToken);
+        // Initialize provider with session
+        await EnsureProviderInitializedAsync(session, tenantId, provider, cancellationToken);
+
+        var result = await provider.SendLocationAsync(to, latitude, longitude, cancellationToken);
 
         var message = new Message
         {
@@ -285,10 +294,13 @@ public class MessageService : IMessageService
             };
         }
 
-        // Initialize provider with session
-        await EnsureProviderInitializedAsync(session, tenantId, cancellationToken);
+        // Get provider for session
+        var provider = _providerFactory.GetProvider(session.ProviderType);
 
-        var result = await _whatsAppProvider.SendAudioAsync(to, audio, cancellationToken);
+        // Initialize provider with session
+        await EnsureProviderInitializedAsync(session, tenantId, provider, cancellationToken);
+
+        var result = await provider.SendAudioAsync(to, audio, cancellationToken);
 
         var message = new Message
         {

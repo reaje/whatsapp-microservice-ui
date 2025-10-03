@@ -17,6 +17,7 @@ public class WebhookController : ControllerBase
     private readonly ITenantRepository _tenantRepository;
     private readonly IWebhookDeliveryService _webhookDeliveryService;
     private readonly IRealtimeNotificationService _realtimeNotificationService;
+    private readonly IAIConversationService _aiConversationService;
     private readonly IConfiguration _configuration;
     private readonly ILogger<WebhookController> _logger;
 
@@ -26,6 +27,7 @@ public class WebhookController : ControllerBase
         ITenantRepository tenantRepository,
         IWebhookDeliveryService webhookDeliveryService,
         IRealtimeNotificationService realtimeNotificationService,
+        IAIConversationService aiConversationService,
         IConfiguration configuration,
         ILogger<WebhookController> logger)
     {
@@ -34,6 +36,7 @@ public class WebhookController : ControllerBase
         _tenantRepository = tenantRepository;
         _webhookDeliveryService = webhookDeliveryService;
         _realtimeNotificationService = realtimeNotificationService;
+        _aiConversationService = aiConversationService;
         _configuration = configuration;
         _logger = logger;
     }
@@ -150,8 +153,46 @@ public class WebhookController : ControllerBase
                 }
             }
 
-            // TODO: Trigger AI agent processing if configured
-            // await _aiAgentService.ProcessIncomingMessageAsync(tenantId, message, cancellationToken);
+            // Processar mensagem com agente de IA se configurado
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    // Verificar se há agente de IA configurado no tenant settings
+                    if (tenant?.Settings != null)
+                    {
+                        var settingsJson = tenant.Settings.RootElement;
+                        if (settingsJson.TryGetProperty("ai_agent_id", out var agentIdElement))
+                        {
+                            var agentIdStr = agentIdElement.GetString();
+                            if (Guid.TryParse(agentIdStr, out var agentId))
+                            {
+                                // Processar mensagem com IA
+                                var aiResponse = await _aiConversationService.ProcessIncomingMessageAsync(
+                                    tenantId,
+                                    agentId,
+                                    session.Id,
+                                    webhook.From,
+                                    webhook.TextContent ?? "",
+                                    CancellationToken.None);
+
+                                // Se houver resposta da IA, enviar automaticamente
+                                if (!string.IsNullOrWhiteSpace(aiResponse))
+                                {
+                                    _logger.LogInformation("AI agent generated response for message {MessageId}", webhook.MessageId);
+
+                                    // TODO: Enviar resposta via MessageService
+                                    // await _messageService.SendTextAsync(tenantId, session.Id, webhook.From, aiResponse);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to process message with AI agent for tenant {TenantId}", tenantId);
+                }
+            }, CancellationToken.None);
 
             return Ok(new { message = "Webhook received and processed successfully" });
         }
