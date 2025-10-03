@@ -5,7 +5,10 @@
       "Bash(awk:*)",
       "Bash(xargs -r kill -f)",
       "Bash(dotnet add package:*)",
-      "Bash(dotnet tool install:*)"
+      "Bash(dotnet tool install:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []
