@@ -1,0 +1,59 @@
+# ========================================
+# BAILEYS SERVICE - Deploy para Azure
+# ========================================
+
+# 1. Build da imagem
+docker build -t baileys-service .
+
+# 2. Verificar imagem criada
+docker images | grep baileys-service
+
+# 3. Login no Azure Container Registry
+docker login -u pythoncontainerhub -p AQvGeOuFZbBZ9+BTgxkV8EtQfWryFLkbBFeUY8jrYl+ACRDUxn+7 pythoncontainerhub.azurecr.io
+
+# 4. Tag da imagem
+docker tag baileys-service pythoncontainerhub.azurecr.io/baileys-service:latest
+
+# 5. Push para ACR
+docker push pythoncontainerhub.azurecr.io/baileys-service:latest
+
+# ========================================
+# Azure Web App - Criar e Configurar
+# Execute no Azure Cloud Shell (https://shell.azure.com)
+# ========================================
+
+# 6. Criar Web App para Baileys (se não existir)
+az webapp create \
+    --name baileys-service-app \
+    --resource-group whatsapp-microservice-rg \
+    --plan whatsapp-plan \
+    --deployment-container-image-name pythoncontainerhub.azurecr.io/baileys-service:latest
+
+# 7. Configurar credenciais do ACR
+az webapp config container set \
+    --name baileys-service-app \
+    --resource-group whatsapp-microservice-rg \
+    --docker-custom-image-name pythoncontainerhub.azurecr.io/baileys-service:latest \
+    --docker-registry-server-url https://pythoncontainerhub.azurecr.io \
+    --docker-registry-server-user pythoncontainerhub \
+    --docker-registry-server-password AQvGeOuFZbBZ9+BTgxkV8EtQfWryFLkbBFeUY8jrYl+ACRDUxn+7
+
+# 8. Configurar variáveis de ambiente
+az webapp config appsettings set \
+    --name baileys-service-app \
+    --resource-group whatsapp-microservice-rg \
+    --settings \
+        NODE_ENV=production \
+        PORT=8080 \
+        WEBSITES_PORT=8080 \
+        SESSION_STORAGE_PATH=/home/sessions \
+        LOG_LEVEL=info
+
+# 9. Restart
+az webapp restart --name baileys-service-app --resource-group whatsapp-microservice-rg
+
+# 10. Ver URL
+az webapp show --name baileys-service-app --resource-group whatsapp-microservice-rg --query defaultHostName -o tsv
+
+# 11. Testar
+# curl https://baileys-service-app.azurewebsites.net/health

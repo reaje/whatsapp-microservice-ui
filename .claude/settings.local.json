@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Stop-Process -Force)",
+      "Bash(awk:*)",
+      "Bash(xargs -r kill -f)",
+      "Bash(dotnet add package:*)",
+      "Bash(dotnet tool install:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

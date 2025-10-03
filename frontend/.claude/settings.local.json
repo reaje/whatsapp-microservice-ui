@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nInicializar frontend React para WhatsApp Multi-Tenant\n\n- Configuração completa do projeto Vite + React + TypeScript\n- Sistema de autenticação com JWT e multi-tenancy\n- Redux Toolkit para gerenciamento de estado\n- React Query para data fetching\n- Integração com Supabase para realtime\n- Componentes de layout, sessões, chat e dashboard\n- Documentação técnica e guias de implementação\n- CLAUDE.md para orientação de desenvolvimento\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git init:*)",
+      "Bash(gh repo create:*)",
+      "Bash(git push:*)",
+      "Bash(winget install:*)",
+      "Bash(gh auth:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
