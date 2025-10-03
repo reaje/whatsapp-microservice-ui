@@ -4,6 +4,9 @@ import {
   Smartphone,
   MessageSquare,
   Settings,
+  Bot,
+  Activity,
+  Users,
 } from 'lucide-react';
 import { ROUTES } from '@/utils/constants';
 import { cn } from '@/utils/helpers';
@@ -23,6 +26,21 @@ const navigation = [
     name: 'Conversas',
     href: ROUTES.CONVERSATIONS,
     icon: MessageSquare,
+  },
+  {
+    name: 'Agentes de IA',
+    href: ROUTES.AI_AGENTS,
+    icon: Bot,
+  },
+  {
+    name: 'Providers',
+    href: ROUTES.PROVIDERS,
+    icon: Activity,
+  },
+  {
+    name: 'Usuários',
+    href: ROUTES.USERS,
+    icon: Users,
   },
   {
     name: 'Configurações',

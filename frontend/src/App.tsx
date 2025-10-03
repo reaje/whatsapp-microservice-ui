@@ -14,6 +14,8 @@ const SessionsPage = lazy(() => import('./pages/Sessions'));
 const ConversationsPage = lazy(() => import('./pages/Conversations'));
 const SettingsPage = lazy(() => import('./pages/Settings'));
 const UsersPage = lazy(() => import('./pages/Users'));
+const AIAgentsPage = lazy(() => import('./pages/AIAgents'));
+const ProvidersPage = lazy(() => import('./pages/Providers'));
 
 // Loading component
 const LoadingScreen = () => (
@@ -136,6 +138,22 @@ function App() {
           element={
             <ProtectedRoute>
               <UsersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.AI_AGENTS}
+          element={
+            <ProtectedRoute>
+              <AIAgentsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.PROVIDERS}
+          element={
+            <ProtectedRoute>
+              <ProvidersPage />
             </ProtectedRoute>
           }
         />

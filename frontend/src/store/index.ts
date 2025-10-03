@@ -4,6 +4,8 @@ import sessionReducer from './slices/sessionSlice';
 import chatReducer from './slices/chatSlice';
 import tenantReducer from './slices/tenantSlice';
 import usersReducer from './slices/usersSlice';
+import aiAgentReducer from './slices/aiAgentSlice';
+import providerReducer from './slices/providerSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +14,8 @@ export const store = configureStore({
     chat: chatReducer,
     tenant: tenantReducer,
     users: usersReducer,
+    aiAgent: aiAgentReducer,
+    provider: providerReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

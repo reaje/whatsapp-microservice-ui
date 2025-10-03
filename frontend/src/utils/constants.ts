@@ -43,6 +43,8 @@ export const ROUTES = {
   CONVERSATIONS: '/conversations',
   SETTINGS: '/settings',
   USERS: '/users',
+  AI_AGENTS: '/ai-agents',
+  PROVIDERS: '/providers',
 } as const;
 
 export const QR_CODE_POLLING_INTERVAL = 3000; // 3 segundos
