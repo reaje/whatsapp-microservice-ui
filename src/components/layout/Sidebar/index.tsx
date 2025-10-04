@@ -1,0 +1,122 @@
+import { NavLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import {
+  LayoutDashboard,
+  Smartphone,
+  MessageSquare,
+  Settings,
+  Bot,
+  Activity,
+  Users,
+  Building2,
+  ShieldCheck,
+} from 'lucide-react';
+import { ROUTES } from '@/utils/constants';
+import { cn } from '@/utils/helpers';
+import type { RootState } from '@/store';
+
+const navigation = [
+  {
+    name: 'Dashboard',
+    href: ROUTES.DASHBOARD,
+    icon: LayoutDashboard,
+  },
+  {
+    name: 'Sessões',
+    href: ROUTES.SESSIONS,
+    icon: Smartphone,
+  },
+  {
+    name: 'Conversas',
+    href: ROUTES.CONVERSATIONS,
+    icon: MessageSquare,
+  },
+  {
+    name: 'Agentes de IA',
+    href: ROUTES.AI_AGENTS,
+    icon: Bot,
+  },
+  {
+    name: 'Providers',
+    href: ROUTES.PROVIDERS,
+    icon: Activity,
+  },
+  {
+    name: 'Usuários',
+    href: ROUTES.USERS,
+    icon: Users,
+  },
+  {
+    name: 'Configurações',
+    href: ROUTES.SETTINGS,
+    icon: Settings,
+  },
+];
+
+const superAdminNavigation = [
+  {
+    name: 'Gerenciar Tenants',
+    href: ROUTES.SUPERADMIN_TENANTS,
+    icon: Building2,
+  },
+  {
+    name: 'Gerenciar Usuários',
+    href: ROUTES.SUPERADMIN_USERS,
+    icon: ShieldCheck,
+  },
+];
+
+export default function Sidebar() {
+  const { user } = useSelector((state: RootState) => state.auth);
+  const isSuperAdmin = user?.role === 'SuperAdmin';
+  return (
+    <aside className="fixed left-0 top-16 bottom-0 w-64 bg-white border-r border-gray-200">
+      <nav className="p-4 space-y-2">
+        {navigation.map((item) => (
+          <NavLink
+            key={item.name}
+            to={item.href}
+            className={({ isActive }) =>
+              cn(
+                'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors',
+                isActive
+                  ? 'bg-primary text-white'
+                  : 'text-gray-700 hover:bg-gray-100'
+              )
+            }
+          >
+            <item.icon className="w-5 h-5" />
+            {item.name}
+          </NavLink>
+        ))}
+
+        {isSuperAdmin && (
+          <>
+            <div className="my-4 border-t border-gray-200 pt-4">
+              <p className="px-4 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Super Admin
+              </p>
+            </div>
+            {superAdminNavigation.map((item) => (
+              <NavLink
+                key={item.name}
+                to={item.href}
+                className={({ isActive }) =>
+                  cn(
+                    'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors',
+                    isActive
+                      ? 'bg-purple-600 text-white'
+                      : 'text-gray-700 hover:bg-purple-50'
+                  )
+                }
+              >
+                <item.icon className="w-5 h-5" />
+                {item.name}
+              </NavLink>
+            ))}
+          </>
+        )}
+      </nav>
+    </aside>
+  );
+}
