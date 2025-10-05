@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "lib": ["ES2021", "DOM"],
+    "types": ["cypress"],
+    "isolatedModules": false,
+    "esModuleInterop": true,
+    "moduleResolution": "Node"
+  },
+  "include": ["**/*.ts", "**/*.tsx"]
+}
+

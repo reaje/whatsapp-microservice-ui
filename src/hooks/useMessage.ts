@@ -64,23 +64,8 @@ export const useMessage = (contactId?: string) => {
     }
   }, [fetchedMessages, contactId, dispatch]);
 
-  // Subscribe to new messages
-  useEffect(() => {
-    if (!contactId) return;
-
-    const channel = supabaseService.subscribeToMessages(contactId, (message) => {
-      dispatch(addMessage({ contactId, message }));
-
-      // Play notification sound for incoming messages
-      if (message.fromNumber !== 'self') {
-        playNotificationSound();
-      }
-    });
-
-    return () => {
-      supabaseService.unsubscribe(`messages:${contactId}`);
-    };
-  }, [contactId, dispatch]);
+  // Subscribe removido: página Conversations já gerencia realtime por tenant.
+  // Isso evita assinatura incorreta por sessionId usando contactId.
 
   // Send text message mutation
   const sendTextMutation = useMutation({

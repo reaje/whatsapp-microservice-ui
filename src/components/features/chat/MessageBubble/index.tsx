@@ -153,6 +153,13 @@ export default function MessageBubble({ message, isOwn }: MessageBubbleProps) {
             : 'bg-white text-gray-800 rounded-bl-none'
         )}
       >
+        {/* IA Badge */}
+        {message?.content?.ai_generated && (
+          <div className={cn('mb-1 inline-flex items-center gap-2 text-[10px] font-semibold rounded px-2 py-0.5', isOwn ? 'bg-white/15 text-white' : 'bg-primary/10 text-primary')}>
+            IA
+          </div>
+        )}
+
         {/* Message Content */}
         <div className="mb-1">
           {renderMessageContent()}

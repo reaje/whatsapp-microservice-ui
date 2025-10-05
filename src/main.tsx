@@ -7,6 +7,7 @@ import { Toaster } from 'react-hot-toast';
 import App from './App';
 import { store } from './store';
 import './index.css';
+import { supabaseService } from './services/supabase.service';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,6 +18,18 @@ const queryClient = new QueryClient({
     },
   },
 });
+// Expor store globalmente em ambiente de desenvolvimento/E2E para facilitar mocks nos testes
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// Helper global para emitir evento de digitação via Supabase Broadcast (para demo/manual)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+;(window as any).__SUPABASE_EMIT_TYPING__ = (contactId: string, isTyping: boolean, source: 'agent' | 'user' = 'agent') => {
+  const tenantId = localStorage.getItem('client_id');
+  if (!tenantId) return;
+  supabaseService.emitTyping(tenantId, contactId, isTyping, source).catch(() => {});
+};
+
+;(window as any).__REDUX_STORE__ = store;
+
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

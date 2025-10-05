@@ -55,12 +55,13 @@ export default defineConfig({
     },
   },
   server: {
-    port: 3000,
+    port: 3001,
+    strictPort: true,
     proxy: {
       '/api': {
-        target: 'https://localhost:44316',
+        target: 'http://localhost:5278',
         changeOrigin: true,
-        secure: false, // Para aceitar certificados self-signed em desenvolvimento
+        secure: false,
       },
     },
   },

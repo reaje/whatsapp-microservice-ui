@@ -182,6 +182,62 @@ export class SupabaseService {
   }
 
   /**
+   * Subscribe to typing indicators via Supabase Realtime Broadcast (per-tenant)
+   */
+  subscribeToTypingByTenant(
+    tenantId: string,
+    callback: (payload: { contactId: string; isTyping: boolean; source?: string }) => void
+  ): RealtimeChannel {
+    const channelName = `typing-tenant:${tenantId}`;
+
+    this.unsubscribe(channelName);
+
+    console.log(`[Supabase] Subscribing to typing events for tenant: ${tenantId}`);
+
+    const channel = supabase
+      .channel(channelName, { config: { broadcast: { self: true } } })
+      .on('broadcast', { event: 'typing' }, ({ payload }) => {
+        try {
+          if (payload && typeof payload.contactId === 'string') {
+            callback(payload as any);
+          }
+        } catch (e) {
+          console.warn('[Supabase] Failed to handle typing payload', e);
+        }
+      })
+      .subscribe((status) => {
+        console.log(`[Supabase] Typing subscription status:`, status);
+      });
+
+    this.channels.set(channelName, channel);
+    return channel;
+  }
+
+  /**
+   * Emit a typing indicator event for a tenant
+   */
+  async emitTyping(
+    tenantId: string,
+    contactId: string,
+    isTyping: boolean,
+    source: 'agent' | 'user' = 'agent'
+  ): Promise<void> {
+    const channelName = `typing-tenant:${tenantId}`;
+    let channel = this.channels.get(channelName);
+    if (!channel) {
+      channel = supabase.channel(channelName, { config: { broadcast: { self: true } } });
+      this.channels.set(channelName, channel);
+      await channel.subscribe();
+    }
+
+    await channel.send({
+      type: 'broadcast',
+      event: 'typing',
+      payload: { contactId, isTyping, source },
+    } as any);
+  }
+
+  /**
    * Unsubscribe from a channel
    */
   async unsubscribe(channelName: string): Promise<void> {

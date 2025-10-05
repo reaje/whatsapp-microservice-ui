@@ -7,9 +7,15 @@ import Sidebar from '@/components/layout/Sidebar';
 import ContactList from '@/components/features/chat/ContactList';
 import ChatWindow from '@/components/features/chat/ChatWindow';
 import NewContactModal from '@/components/features/chat/NewContactModal';
-import { setActiveContact, setContacts, addContact, addMessage, updateMessageStatus } from '@/store/slices/chatSlice';
+import SessionsList from '@/components/features/sessions/SessionsList';
+import InitializeSessionModal from '@/components/features/sessions/InitializeSessionModal';
+import QRCodeDisplay from '@/components/features/sessions/QRCodeDisplay';
+import { useSession } from '@/hooks/useSession';
+import { ProviderTypeEnum } from '@/types';
+import { setActiveContact, setContacts, addContact, addMessage, updateMessageStatus, setTyping } from '@/store/slices/chatSlice';
 import { messageService } from '@/services/message.service';
 import { supabaseService } from '@/services/supabase.service';
+import { fetchActiveAgents } from '@/store/slices/aiAgentSlice';
 import type { RootState } from '@/store';
 import type { Contact } from '@/types';
 
@@ -20,10 +26,22 @@ export default function ConversationsPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showNewContactModal, setShowNewContactModal] = useState(false);
+  // Sessões embutidas na tela de conversas
+  const {
+    sessions: sessionList,
+    loading: sessionsLoading,
+    initializeSession,
+    disconnectSession,
+    getSessionStatus,
+    refetchSessions,
+  } = useSession();
+  const [showInitModal, setShowInitModal] = useState(false);
+  const [qrCodePhone, setQrCodePhone] = useState<string | null>(null);
 
   // Get active session ID
   const activeSession = sessions.find(s => s.status === 'connected');
   const sessionId = activeSession?.id || null;
+  const sessionPhone = activeSession?.phoneNumber || null;
 
   // Fetch conversations from API
   useEffect(() => {
@@ -65,9 +83,27 @@ export default function ConversationsPage() {
     fetchConversations();
   }, [dispatch]);
 
+  // Fase 2: Buscar agentes de IA ativos ao montar a página
+  useEffect(() => {
+    // Ignorar erros silenciosamente em dev/E2E
+    // @ts-ignore
+    dispatch(fetchActiveAgents());
+  }, [dispatch]);
+
+  // Fase 2: Listener de evento de digitação (usado pelos E2E)
+  useEffect(() => {
+    const onTyping = (e: any) => {
+      const { contactId, isTyping } = e.detail || {};
+      if (!contactId) return;
+      dispatch(setTyping({ contactId, isTyping: !!isTyping }));
+    };
+    window.addEventListener('test:typing-indicator', onTyping as EventListener);
+    return () => window.removeEventListener('test:typing-indicator', onTyping as EventListener);
+  }, [dispatch]);
+
   // Subscribe to realtime messages via Supabase
   useEffect(() => {
-    const tenantId = localStorage.getItem('clientId');
+    const tenantId = localStorage.getItem('client_id');
     if (!tenantId) {
       console.warn('[Conversations] No tenant ID found in localStorage');
       return;
@@ -78,27 +114,35 @@ export default function ConversationsPage() {
     // Subscribe to new messages
     const messagesChannel = supabaseService.subscribeToMessagesByTenant(
       tenantId,
-      (message) => {
-        console.log('[Conversations] New message received via realtime:', message);
+      (msg: any) => {
+        console.log('[Conversations] New message received via realtime:', msg);
+
+        // Normalizar campos vindos do realtime (Supabase/Postgres ou SignalR)
+        const fromNumber = msg.fromNumber ?? msg.from ?? msg.from_number;
+        const toNumber = msg.toNumber ?? msg.to ?? msg.to_number;
+        const id = msg.id ?? msg.messageId ?? msg.message_id;
+        const sessionIdMsg = msg.sessionId ?? msg.session_id;
+        const type = msg.type ?? msg.message_type;
+        const content = msg.content ?? (msg.text ? { text: msg.text } : undefined);
+        const status = msg.status;
+        const timestamp = msg.timestamp ?? msg.created_at ?? new Date().toISOString();
 
         // Determinar contactId baseado se mensagem é incoming ou outgoing
-        const contactId = message.fromNumber === 'self'
-          ? message.toNumber
-          : message.fromNumber;
+        const contactId = sessionPhone && fromNumber === sessionPhone ? toNumber : fromNumber;
 
         // Adicionar mensagem ao Redux store
         dispatch(addMessage({
           contactId,
           message: {
-            id: message.id,
-            sessionId: message.sessionId,
-            messageId: message.messageId,
-            fromNumber: message.fromNumber,
-            toNumber: message.toNumber,
-            type: message.type,
-            content: message.content,
-            status: message.status,
-            timestamp: message.timestamp,
+            id,
+            sessionId: sessionIdMsg,
+            messageId: msg.messageId ?? msg.message_id ?? id,
+            fromNumber,
+            toNumber,
+            type,
+            content,
+            status,
+            timestamp,
           }
         }));
 
@@ -141,11 +185,21 @@ export default function ConversationsPage() {
       }
     );
 
+    // Subscribe to typing indicators (Supabase Broadcast)
+    const typingChannel = supabaseService.subscribeToTypingByTenant(
+      tenantId,
+      (payload) => {
+        if (!payload?.contactId) return;
+        dispatch(setTyping({ contactId: payload.contactId, isTyping: !!payload.isTyping }));
+      }
+    );
+
     // Cleanup on unmount
     return () => {
       console.log('[Conversations] Cleaning up realtime subscriptions...');
       supabaseService.unsubscribe(`messages-tenant:${tenantId}`);
       supabaseService.unsubscribe(`message-status-tenant:${tenantId}`);
+      supabaseService.unsubscribe(`typing-tenant:${tenantId}`);
     };
   }, [dispatch]);
 
@@ -168,13 +222,62 @@ export default function ConversationsPage() {
     // Seleciona o contato automaticamente
     dispatch(setActiveContact(newContact));
   };
+  // Sessões: handlers embutidos
+  const handleInitializeSession = async (data: any) => {
+    await initializeSession(data);
+    if ((data as any).providerType === ProviderTypeEnum.Baileys || (data as any).providerType === 0) {
+      setQrCodePhone(data.phoneNumber);
+
+    }
+  };
+  const handleDisconnect = async (phoneNumber: string) => {
+    if (confirm(`Desconectar sessão ${phoneNumber}?`)) {
+      await disconnectSession(phoneNumber);
+    }
+  };
+  const handleViewQRCode = (phoneNumber: string) => setQrCodePhone(phoneNumber);
+  const handleRefreshSession = async (phoneNumber: string) => { await getSessionStatus(phoneNumber); };
+  const handleReconnect = async (phoneNumber: string) => {
+    const phone = phoneNumber.replace(/\D/g, '');
+    await initializeSession({ phoneNumber: phone, providerType: ProviderTypeEnum.Baileys } as any);
+    setQrCodePhone(phone);
+  };
+
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
       <Sidebar />
+      {/* Sessões WhatsApp - Gerencie suas conexões (embutido) */}
+      <div className="ml-64 mt-16 px-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-800">Sessões WhatsApp</h2>
+              <p className="text-gray-600">Gerencie suas conexões do WhatsApp</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <button onClick={() => refetchSessions()} className="btn-secondary">Atualizar</button>
+              <button onClick={() => setShowInitModal(true)} className="btn-primary">Nova Sessão</button>
+            </div>
+          </div>
+          <div className="mt-4">
+            <SessionsList
+              sessions={sessionList}
+              loading={sessionsLoading}
+              onDisconnect={handleDisconnect}
+              onViewQRCode={handleViewQRCode}
+              onRefresh={handleRefreshSession}
+              onReconnect={handleReconnect}
+            />
+          </div>
+        </div>
+      </div>
+
       <div className="ml-64 mt-16 h-[calc(100vh-4rem)] flex bg-gray-100">
         {/* Contact List - Left Sidebar */}
+        {/* Se n e3o houver sess e3o ativa, o chat fica bloqueado (j e1 h e1 mensagem de aviso abaixo) */}
+
         <div className="w-96 flex-shrink-0">
           <ContactList
             contacts={contacts}
@@ -198,6 +301,7 @@ export default function ConversationsPage() {
             <ChatWindow
               contact={activeContact}
               sessionId={sessionId}
+              sessionPhoneNumber={sessionPhone || ''}
             />
           ) : activeContact && !sessionId ? (
             <div className="h-full flex items-center justify-center bg-gray-50">
@@ -228,6 +332,23 @@ export default function ConversationsPage() {
         onClose={() => setShowNewContactModal(false)}
         onAddContact={handleAddContact}
       />
+      {/* Modais de Sessões embutidos */}
+      {showInitModal && (
+        <InitializeSessionModal
+          onClose={() => setShowInitModal(false)}
+          onSubmit={handleInitializeSession}
+        />
+      )}
+      {qrCodePhone && (
+        <QRCodeDisplay
+          phoneNumber={qrCodePhone}
+          onClose={() => setQrCodePhone(null)}
+          onConnected={() => {
+            refetchSessions();
+          }}
+        />
+      )}
+
     </div>
   );
 }

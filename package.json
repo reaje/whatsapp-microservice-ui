@@ -10,6 +10,8 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "test": "vitest",
     "test:e2e": "playwright test",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
     "test:coverage": "vitest --coverage"
   },
   "dependencies": {

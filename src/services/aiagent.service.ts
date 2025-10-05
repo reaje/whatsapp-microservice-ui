@@ -56,4 +56,13 @@ export const aiAgentService = {
     );
     return response.data;
   },
+
+  // Aciona IA manualmente para responder agora o contato (última mensagem entrante)
+  async replyNow(params: { phoneNumber: string; text?: string }): Promise<{ messageId?: string }> {
+    const response = await api.post(`/Message/ai/reply-now`, {
+      phoneNumber: params.phoneNumber,
+      text: params.text,
+    });
+    return response.data;
+  },
 };

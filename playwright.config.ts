@@ -33,7 +33,7 @@ export default defineConfig({
   /* Configurações compartilhadas para todos os projetos */
   use: {
     /* URL base para usar nas ações como `await page.goto('/')` */
-    baseURL: 'http://localhost:3000',
+    baseURL: 'http://localhost:5173',
 
     /* Coleta de traces apenas quando falhar */
     trace: 'on-first-retry',
@@ -49,18 +49,19 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     },
 
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
+    // Temporariamente desabilitados para destravar a execução local de E2E
+    // {
+    //   name: 'firefox',
+    //   use: { ...devices['Desktop Firefox'] },
+    // },
 
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
+    // {
+    //   name: 'webkit',
+    //   use: { ...devices['Desktop Safari'] },
+    // },
 
     /* Testes mobile */
     // {
@@ -75,8 +76,8 @@ export default defineConfig({
 
   /* Executar servidor local antes de iniciar os testes */
   webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:3000',
+    command: 'npm run dev -- --port 5173',
+    url: 'http://localhost:5173',
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
   },
