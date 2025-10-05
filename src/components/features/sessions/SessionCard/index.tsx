@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import {
@@ -7,10 +7,13 @@ import {
   Trash2,
   QrCode,
   MoreVertical,
-  RefreshCw
+  RefreshCw,
+  Loader2
 } from 'lucide-react';
 import { cn, formatPhoneNumber } from '@/utils/helpers';
 import type { Session } from '@/types';
+import { tenantService } from '@/services/tenant.service';
+import { toast } from 'react-hot-toast';
 
 interface SessionCardProps {
   session: Session;
@@ -70,6 +73,46 @@ export default function SessionCard({
 }: SessionCardProps) {
   const [showMenu, setShowMenu] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [aiEnabled, setAiEnabled] = useState<boolean | null>(null);
+  const [togglingAI, setTogglingAI] = useState(false);
+
+  // Carrega estado global de IA do tenant
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const tenant = await tenantService.getSettings();
+        const s = tenant.settings || {};
+        const enabled = s?.features?.ai_enabled !== false;
+        if (mounted) setAiEnabled(enabled);
+      } catch (e) {
+        if (mounted) setAiEnabled(true);
+      }
+    })();
+    return () => { mounted = false; };
+  }, []);
+
+  const handleToggleAIOnCard = async () => {
+    const next = !(aiEnabled ?? true);
+    setAiEnabled(next);
+    try {
+      setTogglingAI(true);
+      // Lê configurações atuais e atualiza flag global do tenant
+      const tenant = await tenantService.getSettings();
+      const newSettings = {
+        ...(tenant.settings || {}),
+        features: { ...(tenant.settings?.features || {}), ai_enabled: next },
+      };
+      await tenantService.updateSettings(newSettings);
+      toast.success(next ? 'IA automática ativada' : 'IA automática desativada');
+    } catch (e: any) {
+      setAiEnabled(!next);
+      toast.error(e?.response?.data?.error || 'Falha ao alternar IA');
+    } finally {
+      setTogglingAI(false);
+    }
+  };
+
 
   const handleDisconnect = async () => {
     setLoading(true);
@@ -118,6 +161,24 @@ export default function SessionCard({
                 <Circle className="w-2 h-2 fill-current" />
                 {getStatusText(session.status)}
               </span>
+
+          {/* Toggle IA global do tenant */}
+
+            <button
+              className={cn(
+                'px-2 py-1 text-sm rounded border transition-colors inline-flex items-center gap-2',
+                togglingAI ? 'opacity-60 cursor-not-allowed' : '',
+                aiEnabled === true ? 'border-green-500 text-green-600 hover:bg-green-50' : 'border-gray-300 text-gray-500 hover:bg-gray-50'
+              )}
+              title="Ativar/Desativar resposta automática com IA (global do tenant)"
+              onClick={handleToggleAIOnCard}
+              disabled={togglingAI || aiEnabled === null}
+            >
+              {togglingAI && <Loader2 className="w-4 h-4 animate-spin" />}
+              <span>Responder com IA {aiEnabled === true ? 'ON' : 'OFF'}</span>
+            </button>
+
+
             </div>
 
             <div className="space-y-1 text-sm text-gray-600">
