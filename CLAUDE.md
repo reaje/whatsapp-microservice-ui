@@ -12,7 +12,7 @@ WhatsApp Multi-Tenant Frontend - A React-based web application for managing What
 
 ### Running the Application
 ```bash
-npm run dev          # Start dev server on http://localhost:3000
+npm run dev          # Start dev server on http://localhost:3001
 npm run build        # Build for production (runs TypeScript check first)
 npm run preview      # Preview production build
 ```
@@ -32,7 +32,7 @@ npm run lint         # Run ESLint on TypeScript/TSX files
 ## Environment Configuration
 
 Required environment variables in `.env`:
-- `VITE_API_URL` - Backend API base URL (default: http://localhost:5000/api/v1)
+- `VITE_API_URL` - Backend API base URL (default: http://localhost:5278/api/v1)
 - `VITE_SUPABASE_URL` - Supabase project URL for realtime features
 - `VITE_SUPABASE_ANON_KEY` - Supabase anonymous key
 - `VITE_APP_ENV` - Environment (development/production)
@@ -138,7 +138,7 @@ The frontend expects the .NET backend API to be running on `VITE_API_URL`. The A
 
 ## Development Notes
 
-- The dev server proxies `/api` requests to `http://localhost:5000` (see `vite.config.ts`)
+- The dev server proxies `/api` requests to `http://localhost:5278` (see `vite.config.ts`)
 - TailwindCSS is configured with custom theme colors
 - ESLint enforces React Hooks rules and TypeScript best practices
 - Strict TypeScript mode enabled

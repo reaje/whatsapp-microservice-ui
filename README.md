@@ -34,7 +34,7 @@ cp .env.example .env
 
 Edite o arquivo `.env` com suas credenciais:
 ```env
-VITE_API_URL=http://localhost:5000/api/v1
+VITE_API_URL=http://localhost:5278/api/v1
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-key
 VITE_APP_ENV=development
@@ -46,7 +46,7 @@ VITE_APP_ENV=development
 ```bash
 npm run dev
 ```
-Acesse: http://localhost:3000
+Acesse: http://localhost:3001
 
 ### Build de Produção
 ```bash
